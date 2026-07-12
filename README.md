@@ -1,5 +1,6 @@
 # 📐 AS.Dev's Desmos Clone
 [![Live Demo](https://img.shields.io/badge/Live_Demo-🚀-brightgreen?style=for-the-badge)](https://desmos-clone-asdev.streamlit.app/)
+<br/>
 A premium, interactive mathematical graphing calculator built with **Streamlit**, **SymPy**, **Matplotlib**, and **NumPy**. Visualize single-variable functions in 2D or multivariable functions in 3D — with real-time calculus analysis, a virtual math keyboard, and a polished glassmorphic dark UI.
 
 <p align="center">
