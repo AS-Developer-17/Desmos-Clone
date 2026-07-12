@@ -1,6 +1,11 @@
 # 📐 AS.Dev's Desmos Clone
-
+[![Live Demo](https://img.shields.io/badge/Live_Demo-🚀-brightgreen?style=for-the-badge)](https://desmos-clone-asdev.streamlit.app/)
 A premium, interactive mathematical graphing calculator built with **Streamlit**, **SymPy**, **Matplotlib**, and **NumPy**. Visualize single-variable functions in 2D or multivariable functions in 3D — with real-time calculus analysis, a virtual math keyboard, and a polished glassmorphic dark UI.
+
+<p align="center">
+  <img src="assets/ui_overview.png" alt="Desmos Clone UI Overview" width="800">
+</p>
+
 
 ---
 
@@ -15,6 +20,10 @@ A premium, interactive mathematical graphing calculator built with **Streamlit**
 - Graph **multivariable** functions `f(x, y)` as 3D surface plots
 - Simultaneously plot **multiple functions** with customizable colors
 - Dynamic **parameter sliders** auto-detected from your expressions
+
+<p align="center">
+  <img src="assets/2d_plot.png" alt="2D Function Visualizer" width="600">
+</p>
 
 ### ∫ Real-Time Calculus Engine
 - **Derivatives**: Symbolic differentiation with overlay toggle
@@ -98,6 +107,10 @@ Desmos-Clone/
 2. Enter a function like `sin(x) * cos(y)` or `x**2 + y**2`
 3. Choose a **surface colormap** and **render mode** from the sidebar
 4. Adjust **elevation** and **azimuth** angles for the 3D view
+
+<p align="center">
+  <img src="assets/3d_plot.png" alt="3D Surface Visualizer" width="600">
+</p>
 
 ### Virtual Keyboard
 - Type directly or use the tabbed keyboard below the input fields
