@@ -183,18 +183,11 @@ st.markdown("""
         display: flex !important;
         flex-direction: column !important;
         justify-content: center !important;
-    }
-
-    /* Force all columns in a row to stretch to the tallest sibling's height */
-    div[data-testid="stHorizontalBlock"] {
-        align-items: stretch !important;
-    }
-    div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
-        display: flex !important;
-        flex-direction: column !important;
-    }
-    div[data-testid="stHorizontalBlock"] > div[data-testid="column"] > div[data-testid="stVerticalBlockBorderWrapper"] {
-        flex: 1 !important;
+        height: 160px !important;
+        min-height: 160px !important;
+        max-height: 160px !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
     }
     
     /* Interactive Button Transitions & Hover Animations */
@@ -226,62 +219,43 @@ st.markdown("""
     }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script>
-    function colorizeButtons() {
-        try {
-            const doc = window.parent.document;
-            const buttons = doc.querySelectorAll("button");
-            buttons.forEach(btn => {
-                if (btn.dataset.colored) return;
-                const txt = btn.innerText || "";
-                if (txt.includes("Space")) {
-                    btn.style.cssText += "background: rgba(59, 130, 246, 0.15) !important; border-color: rgba(59, 130, 246, 0.5) !important; color: #60a5fa !important;";
-                    btn.dataset.colored = "space";
-                } else if (txt.includes("Del") || txt.includes("Clear") || txt.includes("🗑")) {
-                    btn.style.cssText += "background: rgba(239, 68, 68, 0.18) !important; border: 1.5px solid rgba(239, 68, 68, 0.6) !important; color: #f87171 !important; text-shadow: 0 0 8px rgba(239, 68, 68, 0.3) !important;";
-                    btn.dataset.colored = "delete";
-                } else if (txt.includes("Add Function")) {
-                    btn.style.cssText += "background: rgba(16, 185, 129, 0.18) !important; border: 1.5px solid rgba(16, 185, 129, 0.6) !important; color: #34d399 !important; text-shadow: 0 0 8px rgba(16, 185, 129, 0.3) !important; font-weight: 600 !important;";
-                    btn.dataset.colored = "add";
-                }
-            });
-        } catch(e) {}
-    }
-    setInterval(colorizeButtons, 400);
-</script>
 """, unsafe_allow_html=True)
 
-# Secondary component-based colorizer as fallback (runs in parent frame via streamlit.components)
-import streamlit.components.v1 as components
-components.html("""
+# Unified Button colorizer via st.html
+st.html("""
 <script>
 function applyColors() {
     const doc = window.parent.document;
     const buttons = doc.querySelectorAll('button');
     buttons.forEach(btn => {
         const txt = btn.textContent || '';
+        const p = btn.querySelector('p');
+        
         if (txt.includes('Add Function')) {
             btn.style.setProperty('background', 'rgba(16,185,129,0.18)', 'important');
             btn.style.setProperty('border', '1.5px solid rgba(16,185,129,0.6)', 'important');
             btn.style.setProperty('color', '#34d399', 'important');
             btn.style.setProperty('text-shadow', '0 0 8px rgba(16,185,129,0.3)', 'important');
             btn.style.setProperty('font-weight', '600', 'important');
+            if (p) p.style.setProperty('color', '#34d399', 'important');
         } else if (txt.includes('Del') || txt.includes('Clear') || txt.includes('🗑')) {
             btn.style.setProperty('background', 'rgba(239,68,68,0.18)', 'important');
             btn.style.setProperty('border', '1.5px solid rgba(239,68,68,0.6)', 'important');
             btn.style.setProperty('color', '#f87171', 'important');
             btn.style.setProperty('text-shadow', '0 0 8px rgba(239,68,68,0.3)', 'important');
+            if (p) p.style.setProperty('color', '#f87171', 'important');
         } else if (txt.includes('Space')) {
             btn.style.setProperty('background', 'rgba(59,130,246,0.15)', 'important');
-            btn.style.setProperty('border-color', 'rgba(59,130,246,0.5)', 'important');
+            btn.style.setProperty('border', '1.5px solid rgba(59,130,246,0.5)', 'important');
             btn.style.setProperty('color', '#60a5fa', 'important');
+            if (p) p.style.setProperty('color', '#60a5fa', 'important');
         }
     });
 }
-setInterval(applyColors, 500);
+setInterval(applyColors, 400);
 applyColors();
 </script>
-""", height=0)
+""")
 
 # Key mappings for Desmos-like button labels to sympy code
 key_mappings = {
@@ -384,7 +358,7 @@ if 'active_input_idx' not in st.session_state:
     st.session_state.active_input_idx = 0
 
 # Header UI — Premium Animated Gradient Card
-st.markdown("""
+st.html("""
 <div style="position: relative; overflow: hidden;
             background: linear-gradient(135deg, rgba(59, 130, 246, 0.12) 0%, rgba(147, 51, 234, 0.15) 50%, rgba(236, 72, 153, 0.10) 100%);
             background-size: 200% 200%;
@@ -396,11 +370,9 @@ st.markdown("""
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);">
-    <!-- Decorative floating particles -->
     <div style="position: absolute; top: 12px; right: 40px; width: 8px; height: 8px; background: rgba(96, 165, 250, 0.5); border-radius: 50%; animation: float 3s ease-in-out infinite;"></div>
     <div style="position: absolute; top: 30px; right: 80px; width: 5px; height: 5px; background: rgba(192, 132, 252, 0.4); border-radius: 50%; animation: float 4s ease-in-out infinite 0.5s;"></div>
     <div style="position: absolute; bottom: 18px; right: 60px; width: 6px; height: 6px; background: rgba(52, 211, 153, 0.4); border-radius: 50%; animation: float 3.5s ease-in-out infinite 1s;"></div>
-
     <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 12px;">
         <span style="font-size: 2.2rem; animation: float 3s ease-in-out infinite;">📐</span>
         <h1 style="margin: 0; font-size: 2.4rem;
@@ -413,17 +385,17 @@ st.markdown("""
         </h1>
     </div>
     <p style="margin: 0 0 16px 0; color: #b0bec5; font-size: 1.05rem; line-height: 1.6; max-width: 800px;">
-        An advanced mathematical modeling playground — graph single‑variable functions in 2D or multivariable functions in 3D,
-        run real‑time calculus analyses, and adjust extra variables on the fly.
+        An advanced mathematical modeling playground — graph single-variable functions in 2D or multivariable functions in 3D,
+        run real-time calculus analyses, and adjust extra variables on the fly.
     </p>
     <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-        <span style="background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3); color: #60a5fa; padding: 5px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 500;">📈 2D & 3D Plotting</span>
+        <span style="background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3); color: #60a5fa; padding: 5px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 500;">📈 2D &amp; 3D Plotting</span>
         <span style="background: rgba(147, 51, 234, 0.15); border: 1px solid rgba(147, 51, 234, 0.3); color: #c084fc; padding: 5px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 500;">∫ Calculus Engine</span>
         <span style="background: rgba(236, 72, 153, 0.15); border: 1px solid rgba(236, 72, 153, 0.3); color: #f472b6; padding: 5px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 500;">⌨️ Virtual Keyboard</span>
         <span style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); color: #34d399; padding: 5px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 500;">🎨 Custom Colors</span>
     </div>
 </div>
-""", unsafe_allow_html=True)
+""")
 
 # ----------------- SIDEBAR CONFIGURATION -----------------
 st.sidebar.markdown("## ⚙️ Configuration")
@@ -808,27 +780,45 @@ if mode == "Single Variable":
         if not has_closed_integral:
             st.caption("(Disabled: Analytical integration has no simple closed form)")
 
-    col_ref_f, col_ref_df, col_ref_int = st.columns(3)
-    with col_ref_f:
-        with st.container(border=True):
-            latex_repr = sp.latex(active_eval_expr)
-            st.latex(rf"\textrm{{Original }} f_{{{n}}}(x)")
-            st.latex(rf"f_{{{n}}}(x) = {latex_repr}")
+    latex_repr = sp.latex(active_eval_expr)
+    deriv_repr = sp.latex(deriv_expr)
+    
+    if has_closed_integral:
+        integ_repr = sp.latex(integ_expr)
+        integral_str = f"$$\\int f_{{{n}}}(x)\\, dx = {integ_repr}$$"
+    else:
+        integral_str = "No closed-form integral found."
+        
+    table_md = f"""
+<style>
+[data-testid="stMarkdownContainer"] table {{
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(30, 41, 59, 0.35);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    border: none !important;
+}}
+[data-testid="stMarkdownContainer"] th, 
+[data-testid="stMarkdownContainer"] td {{
+    border: 0px solid transparent !important;
+    text-align: center !important;
+    padding: 20px !important;
+    vertical-align: middle !important;
+}}
+[data-testid="stMarkdownContainer"] th {{
+    font-size: 1.1em;
+    color: #e2e8f0;
+}}
+</style>
 
-    with col_ref_df:
-        with st.container(border=True):
-            deriv_repr = sp.latex(deriv_expr)
-            st.latex(rf"\textrm{{Derivative }} f'_{{{n}}}(x)")
-            st.latex(rf"f'_{{{n}}}(x) = {deriv_repr}")
-
-    with col_ref_int:
-        with st.container(border=True):
-            st.latex(rf"\textrm{{Integral of }} f_{{{n}}}(x)")
-            if has_closed_integral:
-                integ_repr = sp.latex(integ_expr)
-                st.latex(rf"\int f_{{{n}}}(x)\, dx = {integ_repr}")
-            else:
-                st.info("No closed-form integral found.")
+| Original $f_{{{n}}}(x)$ | Derivative $f'_{{{n}}}(x)$ | Integral of $f_{{{n}}}(x)$ |
+| :---: | :---: | :---: |
+| $$f_{{{n}}}(x) = {latex_repr}$$ | $$f'_{{{n}}}(x) = {deriv_repr}$$ | {integral_str} |
+"""
+    st.markdown(table_md, unsafe_allow_html=True)
 
     # Graph Evaluation
     x_vals = np.linspace(x_min, x_max, resolution)
@@ -918,20 +908,17 @@ else:
     deriv_y = sp.diff(active_eval_expr_3d, y_sym)
 
     m = selected_index_3d + 1
-    st.markdown("### 📊 Partial Derivatives Reference")
-    col_ref_dx, col_ref_dy = st.columns(2)
-
-    with col_ref_dx:
-        with st.container(border=True):
-            deriv_x_repr = sp.latex(deriv_x)
-            st.latex(rf"\textrm{{Partial w.r.t. }} x")
-            st.latex(rf"\frac{{\partial f_{{{m}}}}}{{\partial x}} = {deriv_x_repr}")
-
-    with col_ref_dy:
-        with st.container(border=True):
-            deriv_y_repr = sp.latex(deriv_y)
-            st.latex(rf"\textrm{{Partial w.r.t. }} y")
-            st.latex(rf"\frac{{\partial f_{{{m}}}}}{{\partial y}} = {deriv_y_repr}")
+    st.markdown("### 🧮 Partial Derivatives Reference")
+    
+    deriv_x_repr = sp.latex(deriv_x)
+    deriv_y_repr = sp.latex(deriv_y)
+    
+    table_pd = f"""
+| Partial w.r.t. $x$ | Partial w.r.t. $y$ |
+| :---: | :---: |
+| $$\\frac{{\\partial f_{{{m}}}}}{{\\partial x}} = {deriv_x_repr}$$ | $$\\frac{{\\partial f_{{{m}}}}}{{\\partial y}} = {deriv_y_repr}$$ |
+"""
+    st.markdown(table_pd, unsafe_allow_html=True)
 
     st.markdown("### 🗳️ Select Surface to Graph")
     plot_surface_choice = st.selectbox(
@@ -1051,7 +1038,7 @@ else:
 
 # ----------------- FOOTER SECTION -----------------
 st.markdown("---")
-st.markdown("""
+st.html("""
 <div style="background: linear-gradient(135deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.7) 100%);
             border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 16px;
@@ -1094,7 +1081,7 @@ st.markdown("""
         </a>
     </div>
     <p style="margin: 16px 0 0 0; color: #475569; font-size: 0.75rem;">
-        © 2025 AS.Dev — All rights reserved
+        &copy; 2026 AS.Dev &mdash; All rights reserved
     </p>
 </div>
-""", unsafe_allow_html=True)
+""")
